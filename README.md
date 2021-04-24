@@ -25,4 +25,4 @@ $ cd
 
 ## Contributing
 
-![Screenshots](https://raw.github.com/xie1027/CIS-550-Project-UNSC/pic1.png)
+![Screenshots](https://github.com/xie1027/CIS-550-Project-UNSC/blob/main/pic1.png)
