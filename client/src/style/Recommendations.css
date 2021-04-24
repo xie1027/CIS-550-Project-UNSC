@@ -1,0 +1,23 @@
+.header-container, .results-container {
+  display: flex;
+  flex-flow: column wrap;
+  /* margin-top: 10px; */
+}
+
+.header-container .headers, .results-container .movieResults {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 50px;
+
+}
+
+.movieResults .title, .movieResults .id, .movieResults .rating, .movieResults .votes, .headers .header {
+  flex: 1 0 25%;
+
+}
+
+
+.jumbotron{
+   background: rgba(229, 218, 218, 0.81); 
+}

@@ -1,0 +1,10 @@
+
+ .navbar-nav {
+    /*background-color: #fafbd9;*/
+    color: red;
+    font-weight: bold;
+}
+
+.navbar-expand-lg{
+  background-color: #dddddd;
+}
