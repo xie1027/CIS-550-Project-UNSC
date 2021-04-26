@@ -14,7 +14,8 @@ export default class Recommendations extends React.Component {
 		this.state = {
 			movieName: "",
 			recSpeaker: [],
-			recMovies: []
+			recMovies: [],
+			speakers: []
 		}
 
 		this.handleMovieNameChange = this.handleMovieNameChange.bind(this);
@@ -62,6 +63,43 @@ export default class Recommendations extends React.Component {
 	//       console.log(err);
 	//     });
  //  	}
+
+
+ componentDidMount() {
+ // Send an HTTP request to the server.
+			 fetch("http://localhost:8081/speakers",
+			 {
+				 method: 'GET' // The type of HTTP request.
+			 }).then(res => {
+				 // Convert the response data to a JSON.
+				 return res.json();
+			 }, err => {
+				 // Print the error if there is one.
+				 console.log(err);
+			 }).then(speakersList => {
+				 if (!speakersList) return;
+				 // Map each genreObj in genreList to an HTML element:
+				 // A button which triggers the showMovies function for each genre.
+				 let speakersDivs = speakersList.map((speakersObj, i) =>
+				 <option value={speakersObj.name}>{speakersObj.name}</option>
+				 );
+
+				 /// Set the state of the genres list to the value returned by the HTTP response from the server.
+				 this.setState({
+					 speakers: speakersDivs
+				 });
+			 }, err => {
+				 // Print the error if there is one.
+				 console.log(err);
+			 });
+ }
+
+ handleChange(e) {
+	 this.setState({
+		 selectedDecade: e.target.value
+	 });
+ }
+
 
 	/* ---- Q2 (Recommendations) ---- */
 	// Hint: Name of movie submitted is contained in `this.state.movieName`.
@@ -143,10 +181,14 @@ export default class Recommendations extends React.Component {
 			    		<div className="h3">Speakers</div>
 
 			    		<br></br>
-			    		<div className="input-container">
-			    			<input type='text' placeholder="Enter Speaker Name" value={this.state.movieName} onChange={this.handleMovieNameChange} id="movieName" className="movie-input"/>
-			    			<button id="submitMovieBtn" className="submit-btn" onClick={this.submitMovie}>Tell me about him/her</button>
-			    		</div>
+							<div className="dropdown-container">
+								<select value={this.state.movieName} onChange={this.handleMovieNameChange} className="movie-input" id="movieName">
+									<option select value>-- select an option --</option>
+									{this.state.speakers}
+								</select>
+								<button className="submit-btn" id="submitMovieBtn" onClick={this.submitMovie}>Tell me about him/her</button>
+							</div>
+
 			    		<div className="header-container">
 			    			<br></br>
 			    			<div className="h6">You would like to know ...</div>

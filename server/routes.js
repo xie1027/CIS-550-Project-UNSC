@@ -78,6 +78,22 @@ function getRecs(req, res) {
 
 };
 
+function getSpeakersList(req, res) {
+
+  var query = `
+      SELECT DISTINCT s.name
+      FROM speakers s
+      ORDER BY s.name
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+};
+
 
 function getSpeaker(req, res) {
 
@@ -185,6 +201,7 @@ function bestGenresPerDecade(req, res) {
 module.exports = {
 	getAllGenres: getAllGenres,
 	getTopInGenre: getTopInGenre,
+  getSpeakersList: getSpeakersList,
 	getSpeaker: getSpeaker,
   getRecs: getRecs,
 	getDecades: getDecades,
