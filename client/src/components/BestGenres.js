@@ -110,7 +110,7 @@ export default class BestGenre extends React.Component {
 			            <div className="header"><strong>Country</strong></div>
 			            <div className="header"><strong>People Directly Affected</strong></div>
 									<div className="header"><strong>UNSC Speeches</strong></div>
-									<div className="header"><strong>Ratio</strong></div>
+									<div className="header"><strong>(%) in All Speeches</strong></div>
 			          </div>
 			          <div className="movies-container" id="results">
 			            {this.state.genres}

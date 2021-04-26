@@ -182,9 +182,9 @@ function bestGenresPerDecade(req, res) {
                       end) as conflict
             from conflict_events
           )
-          select  ce.country , sum(ce.npart) as num_part, cc.conflict_speech as conflict_speech, (ROUND(cc.conflict_speech /ac.all_speech,2) ) AS ratio
+          select  ce.country , sum(POWER(10, ce.npart)) as num_part, cc.conflict_speech as conflict_speech, (ROUND(cc.conflict_speech /ac.all_speech,2) ) AS ratio
           from conflict_events ce join c_type ct on ce.ptype = ct.ptype join all_country ac on  ce.country = ac.country  join conflict_country  cc on ce.country = cc.country
-          where ct.conflict = "${req.params.selectedDecade}"
+          where ct.conflict = "${req.params.selectedDecade}" and  ce.npart <> 11 and ce.npart <> 12 and ce.npart <> 13 and ce.npart <> 99
           group by  ce.country
           order by  sum(ce.npart) DESC, ce.country
       `;
