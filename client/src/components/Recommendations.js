@@ -51,7 +51,7 @@ export default class Recommendations extends React.Component {
 	//       //<GenreButton id={"button-" + genreObj.genre} onClick={() => this.showMovies(genreObj.genre)} genre={genreObj.genre} />
 	//       //);
 
-	      
+
 
 	//       // Set the state of the genres list to the value returned by the HTTP response from the server.
 	//       this.setState({
@@ -82,31 +82,56 @@ export default class Recommendations extends React.Component {
 	      if (!movieList) return;
 	      // Map each genreObj in genreList to an HTML element:
 	      // A button which triggers the showMovies function for each genre.
-	      
+
 	      //let movieDivs = movieList.map((movieObj, i) =>
 	       //<RecommendationsRow title = {movieObj.title} id = {movieObj.id} rating = {movieObj.rating} vote_count = {movieObj.vote_count}/>);
 
 		   let speakerDivs = movieList.map((movieObj, i) =>
 	       <RecommendationsRow1 name = {movieObj.name} country = {movieObj.country} gender = {movieObj.gender} fem_perct = {movieObj.fem_perct}/>);
 
-		   let movieDivs = movieList.map((movieObj, i) =>
-	       <RecommendationsRow country = {movieObj.country} meeting_id = {movieObj.meeting_id} meeting_date = {movieObj.meeting_date} topic_keyword = {movieObj.topic_keyword}/>);
-
-
 	      // set the state of the movie to the value returned by the server
 	      this.setState({
 	      	recSpeaker: speakerDivs,
-	        recMovies: movieDivs
-	        
 	      });
 	      }, err => {
 	        // Print the error if there is one.
 	        console.log(err);
 	      });
-		
+
+				fetch(`http://localhost:8081/meetings/${this.state.movieName}`,
+				{
+					method: 'GET' // The type of HTTP request.
+				}).then(res => {
+					// Convert the response data to a JSON.
+					console.log(res)
+					return res.json();
+				}, err => {
+					// Print the error if there is one.
+					console.log(err);
+				}).then(movieList => {
+					console.log(movieList)
+					if (!movieList) return;
+					// Map each genreObj in genreList to an HTML element:
+					// A button which triggers the showMovies function for each genre.
+
+					//let movieDivs = movieList.map((movieObj, i) =>
+					 //<RecommendationsRow title = {movieObj.title} id = {movieObj.id} rating = {movieObj.rating} vote_count = {movieObj.vote_count}/>);
+
+				 let movieDivs = movieList.map((movieObj, i) =>
+					 <RecommendationsRow country = {movieObj.country} meeting_id = {movieObj.meeting_id} meeting_date = {movieObj.meeting_date} topic_keyword = {movieObj.topic_keyword}/>);
+
+
+					// set the state of the movie to the value returned by the server
+					this.setState({
+						recMovies: movieDivs
+					});
+					}, err => {
+						// Print the error if there is one.
+						console.log(err);
+					});
 	}
 
-	
+
 	render() {
 
 		return (
@@ -116,7 +141,7 @@ export default class Recommendations extends React.Component {
 			    <div className="container recommendations-container">
 			    	<div className="jumbotron">
 			    		<div className="h3">Speakers</div>
-			    		
+
 			    		<br></br>
 			    		<div className="input-container">
 			    			<input type='text' placeholder="Enter Speaker Name" value={this.state.movieName} onChange={this.handleMovieNameChange} id="movieName" className="movie-input"/>
@@ -137,11 +162,11 @@ export default class Recommendations extends React.Component {
 			    				{this.state.recSpeaker}
 			    		    </div>
 			    		</div>
-			    	</div>	
+			    	</div>
 
 			    	<br></br>
 			    	<div className="jumbotron">
-			    		<div className="header-container">	
+			    		<div className="header-container">
 			    			<div className="h5">The Meetings This Speaker Participated:</div>
 				    			<div className="headers">
 				    				<div className="header"><strong>Country</strong></div>
@@ -152,7 +177,7 @@ export default class Recommendations extends React.Component {
 			    			<div className="results-container" id="results">
 			    				{this.state.recMovies}
 			    			</div>
-			    		</div>	
+			    		</div>
 			    	</div>
 			    </div>
 		   	</div>

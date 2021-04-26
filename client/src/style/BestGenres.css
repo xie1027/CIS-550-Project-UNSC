@@ -12,9 +12,9 @@
   padding: 0 15px;
   font-weight: bold;
 
- 
+
 }
 
-.movie .header, .movieResults .title, .movieResults .genre, .movieResults .votes, .movieResults .year, .movieResults .rating {
-  flex: 1 0 40%;
+.movie .header, .movieResults .title, .movieResults .genre, .movieResults .votes, .movieResults .year, .movieResults .rating, .movieResults .conflict_speech, .movieResults .ratio {
+  flex: 1 0 30%;
 }

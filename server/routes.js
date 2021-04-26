@@ -17,18 +17,18 @@ function getAllGenres(req, res) {
   `;*/
   var query = `
     SELECT DISTINCT topic_keyword
-    FROM meetings 
-    WHERE topic_keyword <> '' 
+    FROM meetings
+    WHERE topic_keyword <> ''
     ORDER BY topic_keyword
   `;
-  
+
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
       res.json(rows);
     }
   });
-  
+
 };
 
 
@@ -37,14 +37,14 @@ function getTopInGenre(req, res) {
   /*var query = `
       SELECT genre, rating, vote_count, title
       FROM (
-        SELECT *, ROW_NUMBER () OVER (partition BY G.genre  ORDER BY  M.rating DESC, M.vote_count DESC) AS genre_rank 
-        FROM Movies M JOIN Genres G ON M.id = G.movie_id ) Top10_Genre 
+        SELECT *, ROW_NUMBER () OVER (partition BY G.genre  ORDER BY  M.rating DESC, M.vote_count DESC) AS genre_rank
+        FROM Movies M JOIN Genres G ON M.id = G.movie_id ) Top10_Genre
       WHERE genre_rank <= 10 AND genre = '${req.params.genre}' ;
   `;*/
 
     var query = `
         SELECT s.speaker_country as country,  COUNT(DISTINCT m.id) as num_meetings,  COUNT(DISTINCT m.id, s.seq ) as num_speeches
-        FROM  meetings m  join statements s on m.id = s.meeting_id 
+        FROM  meetings m  join statements s on m.id = s.meeting_id
         WHERE m.topic_keyword <> '' and  s.speaker_country <> 'UN' and s.speaker_country <> 'S'  and s.speaker_country <> 'Unknown' and s.speaker_country <> 'World Bank' and m.topic_keyword = '${req.params.genre}'
         group by speaker_country
         ORDER BY COUNT(DISTINCT m.id) DESC,  speaker_country ASC;
@@ -56,7 +56,7 @@ function getTopInGenre(req, res) {
       res.json(rows);
     }
   });
-  
+
 };
 
 /* ---- Q2 (Recommendations) ---- */
@@ -64,8 +64,8 @@ function getRecs(req, res) {
 
   var query = `
       select sp.country, st.meeting_id as meeting_id, DATE_FORMAT(m.meeting_date, "%m-%d-%Y")  as meeting_date,  m.topic_keyword as topic_keyword
-      FROM speakers sp join statements st on sp.name = st.speaker_name 
-        and sp.country = st.speaker_country join  meetings m on m.id = st.meeting_id 
+      FROM speakers sp join statements st on sp.name = st.speaker_name
+        and sp.country = st.speaker_country join  meetings m on m.id = st.meeting_id
       WHERE sp.name = '${req.params.movieName}' and sp.country <> 'Unknown'
       ORDER BY sp.country, m.meeting_date DESC
   `;
@@ -75,7 +75,7 @@ function getRecs(req, res) {
       res.json(rows);
     }
   });
-  
+
 };
 
 
@@ -84,7 +84,7 @@ function getSpeaker(req, res) {
   var query = `
       WITH male AS(
         SELECT COUNT(DISTINCT name) as num_male
-        FROM speakers 
+        FROM speakers
         WHERE gender = 1 and country in (SELECT country FROM speakers WHERE name = '${req.params.movieName}' )
       ),
       country_stat as(
@@ -102,7 +102,7 @@ function getSpeaker(req, res) {
       res.json(rows);
     }
   });
-  
+
 };
 
 
@@ -139,15 +139,15 @@ function getDecades(req, res) {
 function bestGenresPerDecade(req, res) {
       var query = `
           with conflict_country as(
-              select s.speaker_country as country, COUNT(*) as conflict_speech 
-              from meetings m join statements s on m.id = s.meeting_id 
-              where m.topic_keyword  = 'Conflict' 
-              GROUP BY  s.speaker_country 
+              select s.speaker_country as country, COUNT(*) as conflict_speech
+              from meetings m join statements s on m.id = s.meeting_id
+              where m.topic_keyword  = 'Conflict'
+              GROUP BY  s.speaker_country
           ),
           all_country as(
-              select s.speaker_country as country, COUNT(*) as all_speech 
-              from meetings m join statements s on m.id = s.meeting_id 
-              GROUP BY  s.speaker_country 
+              select s.speaker_country as country, COUNT(*) as all_speech
+              from meetings m join statements s on m.id = s.meeting_id
+              GROUP BY  s.speaker_country
           ),
           c_type as(
             select DISTINCT ptype, (case when ptype = 10 then 'General Warfare'

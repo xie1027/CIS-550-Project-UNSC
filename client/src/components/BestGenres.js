@@ -73,7 +73,7 @@ export default class BestGenre extends React.Component {
 	      // Map each genreObj in genreList to an HTML element:
 	      // A button which triggers the showMovies function for each genre.
 	      let movieDivs = movieList.map((movieObj, i) =>
-	       <BestGenreRow country = {movieObj.country} num_part = {movieObj.num_part} conflict_speech = {movieObj.conflict_speech} />);
+	       <BestGenreRow country = {movieObj.country} num_part = {movieObj.num_part} conflict_speech = {movieObj.conflict_speech} ratio = {movieObj.ratio} />);
 	      // set the state of the movie to the value returned by the server
 	      this.setState({
 	        genres: movieDivs
@@ -109,7 +109,8 @@ export default class BestGenre extends React.Component {
 			          <div className="movie">
 			            <div className="header"><strong>Country</strong></div>
 			            <div className="header"><strong>People Directly Affected</strong></div>
-			            <div className="header"><strong>UNSC Speeches on Conflicts</strong></div>
+									<div className="header"><strong>UNSC Speeches</strong></div>
+									<div className="header"><strong>Ratio</strong></div>
 			          </div>
 			          <div className="movies-container" id="results">
 			            {this.state.genres}
