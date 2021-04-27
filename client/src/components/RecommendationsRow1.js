@@ -7,12 +7,12 @@ export default class RecommendationsRow1 extends React.Component {
 	}
 
 	render() {
-		return ( 
+		return (
 			<div className="movieResults">
-				<div className="title">{this.props.year}</div>
-				<div className="id">{this.props.top_topic}</div>
-				<div className="rating">{this.props.num_disasters}</div>
-				<div className="votes">{this.props.num_conflicts}</div>
+				<div className="title">{this.props.name}</div>
+				<div className="id">{this.props.country}</div>
+				<div className="rating">{this.props.gender}</div>
+				<div className="votes">{this.props.fem_perct}</div>
 			</div>
 		);
 	}
