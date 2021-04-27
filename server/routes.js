@@ -83,6 +83,7 @@ function getSpeakersList(req, res) {
   var query = `
       SELECT DISTINCT s.name
       FROM speakers s
+      WHERE  s.country <> 'Unknown'
       ORDER BY s.name
   `;
   connection.query(query, function(err, rows, fields) {
@@ -182,11 +183,11 @@ function bestGenresPerDecade(req, res) {
                       end) as conflict
             from conflict_events
           )
-          select  ce.country , sum(POWER(10, ce.npart)) as num_part, cc.conflict_speech as conflict_speech, (ROUND(cc.conflict_speech /ac.all_speech,2) ) AS ratio
+          select  ce.country , FORMAT(sum(POWER(10, ce.npart)),'#,0.00')  as num_part, cc.conflict_speech as conflict_speech, (ROUND(cc.conflict_speech /ac.all_speech,2) ) AS ratio
           from conflict_events ce join c_type ct on ce.ptype = ct.ptype join all_country ac on  ce.country = ac.country  join conflict_country  cc on ce.country = cc.country
           where ct.conflict = "${req.params.selectedDecade}" and  ce.npart <> 11 and ce.npart <> 12 and ce.npart <> 13 and ce.npart <> 99
           group by  ce.country
-          order by  sum(ce.npart) DESC, ce.country
+          order by  sum(POWER(10, ce.npart)) DESC, ce.country
       `;
       connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
@@ -197,6 +198,90 @@ function bestGenresPerDecade(req, res) {
 
 };
 
+/* Natural Disasters*/
+function getDisastersList(req, res) {
+
+  var query = `
+      SELECT DISTINCT fy_declared AS year
+      FROM disaster_declarations 
+      ORDER BY fy_declared DESC 
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+};
+
+
+
+function getDisaster(req, res) {
+
+  var query = `
+    SELECT incident_type, FORMAT( count(incident_type),'#,0.00') AS num_disasters, substring_index(group_concat(DISTINCT state SEPARATOR ','), ',', 3) AS states 
+    FROM disaster_declarations  
+    WHERE fy_declared = '${req.params.year_num}' 
+    GROUP BY (fy_declared), incident_type
+    ORDER BY count(incident_type) DESC
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+};
+
+
+function getYears(req, res) {
+
+  var query = `
+        WITH RANK_TABLE AS(
+          SELECT YEAR(meeting_date) AS year, topic_keyword as topic, 
+                RANK() OVER(PARTITION BY YEAR(meeting_date) ORDER BY COUNT(topic_keyword) DESC) AS rn
+          FROM meetings m
+          WHERE topic_keyword  <> 'Others' AND topic_keyword  <> '' AND YEAR(meeting_date) < 2015 AND YEAR(meeting_date) > 1994
+          GROUP BY YEAR(meeting_date) , topic_keyword
+        ),
+        topics AS(
+          SELECT year,  GROUP_CONCAT(topic) AS top_topic
+          FROM RANK_TABLE
+          WHERE rn = 1
+          GROUP BY year 
+          ORDER BY year DESC
+        ),
+        disasters AS(
+          SELECT YEAR(declaration_date) AS year, COUNT(incident_type) as num_disasters
+          from disaster_declarations
+          where fy_declared < 2015 and fy_declared > 1994
+          GROUP BY YEAR(declaration_date)
+        ),
+        conflicts AS(
+          SELECT eyear  AS year, COUNT(event_id) AS num_conflicts
+          FROM conflict_events
+          WHERE eyear < 2015 AND eyear > 1994
+          GROUP BY eyear
+        )
+        SELECT t.year , t.top_topic, d.num_disasters, c.num_conflicts
+        FROM topics t join disasters d on t.year = d.year join conflicts c on c.year = d.year
+        ORDER BY year DESC
+
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+};
+
+
+
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
 	getAllGenres: getAllGenres,
@@ -205,5 +290,8 @@ module.exports = {
 	getSpeaker: getSpeaker,
   getRecs: getRecs,
 	getDecades: getDecades,
-  bestGenresPerDecade: bestGenresPerDecade
+  bestGenresPerDecade: bestGenresPerDecade,
+  getDisastersList: getDisastersList,
+  getDisaster: getDisaster,
+  getYears: getYears,
 }

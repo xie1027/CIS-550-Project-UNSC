@@ -36,7 +36,7 @@ app.get('/genres/:genre', routes.getTopInGenre); // Hint: Replace () => {} with 
 
 
 
-/* ---- Q2 (Recommendations) ---- */
+/* ---- Q2 (Speakers) ---- */
 app.get('/speakers', routes.getSpeakersList);
 app.get('/recommendations/:movieName', routes.getSpeaker);
 app.get('/meetings/:movieName', routes.getRecs);
@@ -45,20 +45,15 @@ app.get('/meetings/:movieName', routes.getRecs);
 
 
 
-/* ---- (Best Genre) ---- */
+/* ---- Conflicts 1 ---- */
 app.get('/decades', routes.getDecades);
-
-
-
-
-
-
-/* ---- Q3b (Best Genre) ---- */
+/* ---- Conflicts 2 ---- */
 app.get('/bestgenres/:selectedDecade', routes.bestGenresPerDecade);
 
-
-
-
+/* Disasters */
+app.get('/disasters', routes.getDisastersList);
+app.get('/disasters/:year_num', routes.getDisaster);
+app.get('/years/:year_num', routes.getYears);
 
 
 

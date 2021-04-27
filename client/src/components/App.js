@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import Recommendations from './Recommendations';
 import BestGenres from './BestGenres';
 import About from './About';
+import Disasters from './Disasters';
 
 export default class App extends React.Component {
 
@@ -46,6 +47,12 @@ export default class App extends React.Component {
 							path="/about"
 							render={() => (
 								<About />
+							)}
+						/>
+						<Route
+							path="/disasters"
+							render={() => (
+								<Disasters />
 							)}
 						/>
 					</Switch>
