@@ -1,0 +1,18 @@
+/*Instructions for building it locally */
+
+1. Download and unzip ​CIS-550-Project-UNSC.zip​
+2. In terminal, ​cd​ into the CIS-550-Project-UNSC/client​ directory
+3. cd​ into the ​CIS-550-Project-UNSC/server​ directory.
+4. import the data to your local MySQL, using the following credentials
+
+############### Credentials Starts ##################
+HostName: cis550-proj-db.c8fqqkclel8w.us-east-1.rds.amazonaws.com
+Port: 3306
+Username: admin
+Password: admin123
+############### Credentials Ends ##################
+
+5. While in the ​/server​ folder, type ​npm start​ in the terminal to start the server
+6. In a separate terminal window, ​cd ​into the ​hw2/client​ folder and type ​npm start​. This will start the client-side code. Your browser should automatically open to http://localhost:3000​. If not, enter this link manually.
+
+If your setup was successful, you should see our project page! Thank you!
