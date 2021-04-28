@@ -95,6 +95,24 @@ function getSpeakersList(req, res) {
 
 };
 
+function getSpeakersTop10List(req, res) {
+
+  var query = `
+      SELECT speaker_name AS name, SUM(text_len) AS count
+      FROM statements
+      WHERE speaker_country <> 'Unknown'
+      GROUP BY speaker_name, speaker_country
+      ORDER BY count DESC
+      LIMIT 10
+  `;
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+
+};
 
 function getSpeaker(req, res) {
 
@@ -203,8 +221,8 @@ function getDisastersList(req, res) {
 
   var query = `
       SELECT DISTINCT fy_declared AS year
-      FROM disaster_declarations 
-      ORDER BY fy_declared DESC 
+      FROM disaster_declarations
+      ORDER BY fy_declared DESC
   `;
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
@@ -220,9 +238,9 @@ function getDisastersList(req, res) {
 function getDisaster(req, res) {
 
   var query = `
-    SELECT incident_type, FORMAT( count(incident_type),'#,0.00') AS num_disasters, substring_index(group_concat(DISTINCT state SEPARATOR ','), ',', 3) AS states 
-    FROM disaster_declarations  
-    WHERE fy_declared = '${req.params.year_num}' 
+    SELECT incident_type, FORMAT( count(incident_type),'#,0.00') AS num_disasters, substring_index(group_concat(DISTINCT state SEPARATOR ','), ',', 3) AS states
+    FROM disaster_declarations
+    WHERE fy_declared = '${req.params.year_num}'
     GROUP BY (fy_declared), incident_type
     ORDER BY count(incident_type) DESC
   `;
@@ -240,7 +258,7 @@ function getYears(req, res) {
 
   var query = `
         WITH RANK_TABLE AS(
-          SELECT YEAR(meeting_date) AS year, topic_keyword as topic, 
+          SELECT YEAR(meeting_date) AS year, topic_keyword as topic,
                 RANK() OVER(PARTITION BY YEAR(meeting_date) ORDER BY COUNT(topic_keyword) DESC) AS rn
           FROM meetings m
           WHERE topic_keyword  <> 'Others' AND topic_keyword  <> '' AND YEAR(meeting_date) < 2015 AND YEAR(meeting_date) > 1994
@@ -250,7 +268,7 @@ function getYears(req, res) {
           SELECT year,  GROUP_CONCAT(topic) AS top_topic
           FROM RANK_TABLE
           WHERE rn = 1
-          GROUP BY year 
+          GROUP BY year
           ORDER BY year DESC
         ),
         disasters AS(
@@ -287,6 +305,7 @@ module.exports = {
 	getAllGenres: getAllGenres,
 	getTopInGenre: getTopInGenre,
   getSpeakersList: getSpeakersList,
+  getSpeakersTop10List: getSpeakersTop10List,
 	getSpeaker: getSpeaker,
   getRecs: getRecs,
 	getDecades: getDecades,

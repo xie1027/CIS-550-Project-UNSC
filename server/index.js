@@ -38,6 +38,7 @@ app.get('/genres/:genre', routes.getTopInGenre); // Hint: Replace () => {} with 
 
 /* ---- Q2 (Speakers) ---- */
 app.get('/speakers', routes.getSpeakersList);
+app.get('/top10speakers', routes.getSpeakersTop10List);
 app.get('/recommendations/:movieName', routes.getSpeaker);
 app.get('/meetings/:movieName', routes.getRecs);
 

@@ -20,6 +20,8 @@ export default class Recommendations extends React.Component {
 
 		this.handleMovieNameChange = this.handleMovieNameChange.bind(this);
 		this.submitMovie = this.submitMovie.bind(this);
+		this.fetchTop10Speakers = this.fetchTop10Speakers.bind(this);
+		this.fetchAllSpeakers = this.fetchAllSpeakers.bind(this);
 	}
 
 	handleMovieNameChange(e) {
@@ -170,6 +172,67 @@ export default class Recommendations extends React.Component {
 	}
 
 
+
+fetchTop10Speakers() {
+  // Send an HTTP request to the server.
+		 fetch("http://localhost:8081/top10speakers",
+		 {
+			 method: 'GET' // The type of HTTP request.
+		 }).then(res => {
+			 // Convert the response data to a JSON.
+			 return res.json();
+		 }, err => {
+			 // Print the error if there is one.
+			 console.log(err);
+		 }).then(speakersList => {
+			 if (!speakersList) return;
+			 // Map each genreObj in genreList to an HTML element:
+			 // A button which triggers the showMovies function for each genre.
+			 let speakersDivs = speakersList.map((speakersObj, i) =>
+			 <option value={speakersObj.name}>{speakersObj.name}</option>
+			 );
+
+			 /// Set the state of the genres list to the value returned by the HTTP response from the server.
+			 this.setState({
+				 speakers: speakersDivs
+			 });
+		 }, err => {
+			 // Print the error if there is one.
+			 console.log(err);
+		 });
+}
+
+fetchAllSpeakers() {
+  // Send an HTTP request to the server.
+		 fetch("http://localhost:8081/speakers",
+		 {
+			 method: 'GET' // The type of HTTP request.
+		 }).then(res => {
+			 // Convert the response data to a JSON.
+			 return res.json();
+		 }, err => {
+			 // Print the error if there is one.
+			 console.log(err);
+		 }).then(speakersList => {
+			 if (!speakersList) return;
+			 // Map each genreObj in genreList to an HTML element:
+			 // A button which triggers the showMovies function for each genre.
+			 let speakersDivs = speakersList.map((speakersObj, i) =>
+			 <option value={speakersObj.name}>{speakersObj.name}</option>
+			 );
+
+			 /// Set the state of the genres list to the value returned by the HTTP response from the server.
+			 this.setState({
+				 speakers: speakersDivs
+			 });
+		 }, err => {
+			 // Print the error if there is one.
+			 console.log(err);
+		 });
+}
+
+
+
 	render() {
 
 		return (
@@ -179,6 +242,11 @@ export default class Recommendations extends React.Component {
 			    <div className="container recommendations-container">
 			    	<div className="jumbotron">
 			    		<div className="h3">Speakers</div>
+
+							<div className="dropdown-container">
+								<button className="submit-btn" id="fetchAll" onClick={this.fetchAllSpeakers}>List all speakers</button>
+								<button className="submit-btn" id="fetchTop10" onClick={this.fetchTop10Speakers}>List only top 10 speakers</button>
+							</div>
 
 			    		<br></br>
 							<div className="dropdown-container">
