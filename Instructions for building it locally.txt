@@ -12,7 +12,7 @@ Username: admin
 Password: admin123
 ############### Credentials Ends ##################
 
-5. While in the ​/server​ folder, type ​npm start​ in the terminal to start the server
-6. In a separate terminal window, ​cd ​into the ​hw2/client​ folder and type ​npm start​. This will start the client-side code. Your browser should automatically open to http://localhost:3000​. If not, enter this link manually.
+5. While in the ​/server​ folder, type ​"npm install; npm start​" in the terminal to start the server
+6. In a separate terminal window, ​cd ​into the ​hw2/client​ folder and type ​"npm install; npm start​". This will start the client-side code. Your browser should automatically open to http://localhost:3000​. If not, enter this link manually.
 
 If your setup was successful, you should see our project page! Thank you!
